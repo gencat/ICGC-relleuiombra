@@ -1,20 +1,11 @@
 sources:
-    osm:
-      type: TopoJSON
-      url: https://vector.mapzen.com/osm/all/{z}/{x}/{y}.topojson?api_key=vector-tiles-JUsa0Gc
-      max_zoom: 16
-      rasters: [normals]
     cat:
         type: GeoJSON
-        url: limitcat.geojson
-        #type: MVT
-        #url: http://betaserver.icgc.cat/tileservervt/tileserver.php/limitcat50m/{z}/{x}/{y}.pbf
+        url: polcat4326.geojson
         max_zoom: 16
         rasters: [normals]
     normals:
         type: Raster
-        #url: https://terrain-preview.mapzen.com/normal/{z}/{x}/{y}.png
-        #url: http://172.70.1.11/mapcache/tms/1.0.0/normalmap@GMTOTNW/{z}/{x}/{y}.png
         url: http://betaserver.icgc.cat/tileserver2/tileserver.php?/normalmap/{z}/{x}/{y}.png
         max_zoom: 16
         min_zoom: 7
@@ -52,7 +43,7 @@ styles:
 
 layers:
     earth:
-        data: { source: osm }
+        data: { source: cat }
         draw:
             hillshade:
                 order: 0

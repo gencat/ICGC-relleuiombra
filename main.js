@@ -95,23 +95,6 @@ map = (function () {
         "fillOpacity": 0.5
     };
 
-    /*
-    var geojsonURL = 'http://localhost/lod/cat_pol/GEOJSON/{z}/{x}/{y}.geojson';
-    var geojsonTileLayer = new L.TileLayer.GeoJSON(geojsonURL, {
-            clipTiles: true,
-            unique: function (feature) {
-                return feature.id;
-            }
-        }, {
-            style: style,
-        }
-    );
-    map.addLayer(geojsonTileLayer);
-    */
-
-
-
-
     });
 
     return map;
