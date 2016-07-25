@@ -46,6 +46,7 @@
             padding: 0;
             width: 256px;
             height: 256px;
+            cursor: crosshair;
         }
         #reticle {
             position: absolute;
@@ -74,6 +75,15 @@
         input[type=text] {
           width: 40px;
         }
+
+        .logo{
+          margin-top: 10px;
+          width: 256px;
+        }
+
+      .font-xica{
+        font-size: 8pt;
+      }
     </style>
   </head>
 
@@ -82,7 +92,9 @@
         <img id="reticle" src="reticle_ok.png">
         <canvas id="kcanvas" height="256" width="256" style="border:1px #000 solid;" onmouseover="hidePicker()"></canvas>
         <script src="lib/jscolor.min.js"></script>
-        <br>
+        <p class="font-xica">
+          Seleccioneu un color i pinteu dins del cercle
+        </p>
         <input id="picker" class="jscolor" value="ab5127" onmouseover="this.jscolor.show();" onchange="updateColor(this.value);"><br>
         <script>
         // http://www.paulirish.com/2009/random-hex-color-code-snippets/
@@ -122,6 +134,9 @@
         <button class="kbutton" onclick="loadImage('wheels/pencil2.jpg')">Pencil</button>
         <button class="kbutton" onclick="loadImage('wheels/rampa_rodona.png')">Rodona</button>
         <button class="kbutton" onclick="loadImage('wheels/rampa_diamant.png')">Diamant</button>
+        <br>
+        <img src="icgc2016_256.png" alt="Institut Cartogràfic i Geològic de Catalunya" class="logo"/>
+
     </div>
 
     <div id="map" onmouseover="hidePicker()"></div>
