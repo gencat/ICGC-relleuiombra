@@ -1,4 +1,4 @@
-# llums i ombres
+# relleu i ombra
 
 An interactive terrain-lighting spheremap painter for [Tangram](http://github.com/tangrams/tangram), using a normal map created from the 5x5 m DTM of [ICGC](http://www.icgc.cat) (Institut Cartogràfic i Geològic de Catalunya)
 
