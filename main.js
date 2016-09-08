@@ -1,6 +1,5 @@
 /*jslint browser: true*/
 /*global Tangram, gui */
-
 map = (function () {
     'use strict';
 
@@ -25,7 +24,8 @@ map = (function () {
         minZoom: 8,
         maxZoom: 16,
         maxBounds: new L.LatLngBounds(new L.LatLng(40.421087468828297,-0.097789200457408), new L.LatLng(42.929122686256072,3.458340585791309)),
-        scrollWheelZoom: false}
+        scrollWheelZoom: false
+        }
     );
 
     L.control.zoomLabel().addTo(map);
@@ -45,16 +45,19 @@ map = (function () {
     var hash = new L.Hash(map);
 
     window.toponimia = L.tileLayer('http://betaserver.icgc.cat/tileserver2/tileserver.php?/toponimia_8-18/{z}/{x}/{y}.png', {
+      renderer: L.canvas(),
       maxZoom : 13,
-      minZoom : 8
+      minZoom : 8,
     });
 
     window.toponimia_14_18 = L.tileLayer('http://betaserver.icgc.cat/tileserver2/tileserver.php?/topon_reben_invers_12a18/{z}/{x}/{y}.png', {
+      renderer: L.canvas(),
       maxZoom : 18,
       minZoom : 14
     });
 
     window.hibridatotal = L.tileLayer('http://betaserver.icgc.cat/tileserver2/tileserver.php?/Hibrida_total/{z}/{x}/{y}.png', {
+      renderer: L.canvas(),
       attribution: 'Tiles and map data courtesy of <a href="http://www.icgc.cat/" target="_blank">Institut Cartogràfic i Geològic de Catalunya</a>'
     });
 
@@ -165,6 +168,7 @@ function saveCanvas() {
     // save current state in case of undo
     URL.revokeObjectURL(lastCanvas.url);
     canvas.toBlob(function(blob) {
+        lastCanvas.blob = blob;
         lastCanvas.url = URL.createObjectURL(blob);
     });
 }
@@ -205,7 +209,7 @@ function updateMap(){
 }
 
 function clearMap(){
-  document.getElementById('toponimia').checked = false;
+  document.getElementById('toponimia').checked = true;
   document.getElementById('hibrida').checked = true;
   document.getElementById('allaus').checked = false;
   document.getElementById('vegetacio').checked = false;
@@ -227,6 +231,10 @@ window.onload = function() {
     saveCanvas();
 
     clearMap();
+
+    //para activar la toponimia de inicio
+    toggleToponimia();
+
 
     var inputImg = document.getElementById('imgsphere');
     inputImg.onchange = function(){
@@ -252,13 +260,18 @@ window.onload = function() {
     inputVegetacio.addEventListener("click", function(e){
       toggleVegetacio();
     });
+
+    document.getElementById('default_style').click();
 }
 
 function exportCanvas() {
+  saveAs(lastCanvas.blob, 'mapa_llums.png');
+  /*
     window.open(
       lastCanvas.url,
       '_blank' // <- This is what makes it open in a new window.
     );
+    */
 }
 
 function updateWidth(val) {
@@ -273,7 +286,6 @@ function updateAlpha(val) {
 
 function loadCanvas(input){
   if (input.files && input.files[0]) {
-
     var reader = new FileReader();
     reader.onload = function (e) {
       loadImage(e.target.result);
@@ -290,6 +302,7 @@ function loadImage(src){
     updateMap();
   }
   img.src = src;
+  saveCanvas();
 }
 
 function toggleHibrida(evt, input){
@@ -324,4 +337,10 @@ function toggleVegetacio(){
   }else{
     map.addLayer(vegetacio);
   }
+}
+
+function captureMap(){
+  scene.screenshot().then(function(screenshot) {
+    saveAs(screenshot.blob, 'captura_mapa.png');
+  });
 }
