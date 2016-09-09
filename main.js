@@ -61,7 +61,7 @@ map = (function () {
       attribution: 'Tiles and map data courtesy of <a href="http://www.icgc.cat/" target="_blank">Institut Cartogràfic i Geològic de Catalunya</a>'
     });
 
-    window.vegetacio = L.tileLayer.wms(" http://www.opengis.uab.es/cgi-bin/MCSC/MiraMon.cgi", {
+    window.vegetacio = L.tileLayer.wms('http://www.opengis.uab.es/cgi-bin/MCSC/MiraMon.cgi', {
         layers: 'mcsc-catalunya',
         format: 'image/png',
         transparent: true,
@@ -69,7 +69,7 @@ map = (function () {
         attribution: 'Tiles courtesy of <a href="http://www.creaf.cat/" target="_blank">CREAF</a>'
     });
 
-    window.allaus = L.tileLayer.wms("http://siurana.icgc.cat/geoserver/nivoallaus/wms", {
+    window.allaus = L.tileLayer.wms('http://siurana.icgc.cat/geoserver/nivoallaus/wms', {
         layers: 'enquestes,observacions',
         format: 'image/png',
         transparent: true,
