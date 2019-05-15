@@ -2,13 +2,13 @@ sources:
     cat:
         type: GeoJSON
         url: polcat4326.geojson
-        max_zoom: 16
+        max_zoom: 17
         rasters: [normals]
     normals:
         type: Raster
-        url: http://betaserver.icgc.cat/tileserver2/tileserver.php?/normalmap/{z}/{x}/{y}.png
-        max_zoom: 16
-        min_zoom: 7
+        url: http://betaserver.icgc.cat/tileserver3/tileserver.php?/norm2x2/{z}/{x}/{y}.png
+        max_zoom: 17
+        min_zoom: 4
 scene:
     background:
         color: white

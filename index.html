@@ -11,16 +11,18 @@
     <meta charset="utf-8">
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Llums i ombres DEM 5x5</title>
+    <title>Relleu i ombra: anàlisi visual d'orientacions i pendents</title>
 
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.0.0-rc.1/leaflet.css" />
+    <!-- <link rel="stylesheet" href="https://unpkg.com/leaflet@1.0.0-rc.3/dist/leaflet.css" /> -->
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.5.1/dist/leaflet.css" />
     <link rel="stylesheet" href="css/L.Control.ZoomLabel.css">
+    <link href="https://fonts.googleapis.com/css?family=Roboto" rel="stylesheet">
     <style>
         body {
             margin: 0px;
             border: 0px;
             padding: 0px;
-            font-family: Verdana, Arial, Serif;
+            font-family: 'Roboto', sans-serif;
         }
 
         #map {
@@ -30,14 +32,15 @@
             position: absolute;
         }
         #kinkade {
-            font-size: 14px;
+            font-size: 12px;
             position: absolute;
             right: 6px;
-            z-index: 1000;
-            background: white;
-            padding: 4px 0 4px 4px;
-            margin: 0;
+            z-index: 1001;
+            background: #f2f2f2;
+            padding: 4px 4px 4px 4px;
+            margin-top: 5px;
             width: 256px;
+            opacity: 0.90;
             /*height: 256px;*/
         }
         #kcanvas {
@@ -51,11 +54,12 @@
         #reticle {
             position: absolute;
             pointer-events: none;
+            float: left;
             width: 256px;
             height: 256px;
-            left: 5.5px;
-            top: 5.33px;
-            opacity: 0.4;
+            /*left: 4.5px;
+            top: 265.33px;*/
+            opacity: 0.6;
         }
         #saveButton {
             font-size: 30px;
@@ -63,8 +67,10 @@
             clear: none;
         }
         #picker {
-            width: 250px;
+            width: 100%;
             font-size: 15px;
+            border: none;
+            padding: 1px;
         }
         .kbutton {
             /*font-size: 15px;*/
@@ -76,73 +82,262 @@
           width: 40px;
         }
 
-        .logo{
-          margin-top: 10px;
-          width: 256px;
+        .logo {
+            bottom: 2px;
+            left: 2px;
+            position: absolute;
+            width: 128px;
+            z-index: 1000;
         }
 
       .font-xica{
         font-size: 8pt;
+        margin-top: 3px;
       }
+
+      .twitter{
+        float: right;
+      }
+
+      .header{
+        padding-top: 2px;
+      }
+
+      .titol{
+        font-size: 20px;
+        font-weight: bold;
+        font-style: normal;
+        text-decoration: underline;
+        margin-top: 10px;
+      }
+
+      .bold{
+        font-weight: bold;
+      }
+
+      .examples {
+        font-size: 11px;
+      }
+
+      .examples ul{
+        margin-top: 3px;
+        list-style-type: none;
+        padding-left: 15px;
+      }
+      .examples ul li{
+        padding-top: 2px;
+      }
+
+      .subtitle{
+        margin-top: 5px;
+        margin-bottom: 8px;
+        font-size: 1.2em;
+      }
+
+      .tools{
+        margin-top: 5px;
+      }
+
+      .buttons{
+          margin-top: 8px;
+          margin-bottom: 8px;
+      }
+
+      .row{
+        width: 100%;
+      }
+
+      .inputfile {
+      	width: 0.1px;
+      	height: 0.1px;
+      	opacity: 0;
+      	overflow: hidden;
+      	position: absolute;
+      	z-index: -1;
+      }
+
+      .inputfile + label {
+          display: inline-block;
+      }
+
+      .btn {
+        position: relative;
+        display: block;
+        margin: 5px auto;
+        padding: 5px 12px;
+        overflow: hidden;
+        border-width: 0;
+        outline: none;
+        border-radius: 2px;
+        box-shadow: 0 1px 4px rgba(0, 0, 0, .6);
+        background-color: #2596df;
+        color: #ecf0f1;
+        transition: background-color .3s;
+        min-width: 180px;
+      }
+
+      .btn:hover, .btn:focus {
+        background-color: #00B4E8;
+      }
+
+      /* The slider itself */
+      .slider {
+        -webkit-appearance: none;
+        width: 100%;
+        height: 10px;
+        border-radius: 5px;   
+        background: #d3d3d3;
+        outline: none;
+        opacity: 0.7;
+        -webkit-transition: .2s;
+        transition: opacity .2s;
+        margin: 10px 0;
+      }
+
+      .slider::-webkit-slider-thumb {
+        -webkit-appearance: none;
+        appearance: none;
+        width: 20px;
+        height: 20px;
+        border-radius: 50%; 
+        background: #2596df;
+        cursor: pointer;
+      }
+
+      .slider::-moz-range-thumb {
+        width: 20px;
+        height: 20px;
+        border-radius: 50%;
+        background: #2596df;
+        cursor: pointer;
+      }
+
     </style>
   </head>
 
   <body>
     <div id="kinkade">
-        <img id="reticle" src="reticle_ok.png">
-        <canvas id="kcanvas" height="256" width="256" style="border:1px #000 solid;" onmouseover="hidePicker()"></canvas>
-        <script src="lib/jscolor.min.js"></script>
+        <div class="header">
+          <span class="titol">Relleu i ombra</span>
+          <span><a href="http://betaportal.icgc.cat/wordpress/relleu-i-ombra/" target="_blank"><img src="info.png" alt="" /></a></span>
+          <span class="twitter">
+            <a href="https://twitter.com/share" class="twitter-share-button" data-via="geostarters" data-show-count="false">Tweet</a>
+            <script async src="//platform.twitter.com/widgets.js" charset="utf-8"></script>
+          </span>
+        </div>
+        <div class="bold subtitle">
+          Anàlisi visual d'orientacions i pendents
+        </div>
+  
+        <div class="bold">
+          Crea el teu mapa de llums
+        </div>
         <p class="font-xica">
-          Seleccioneu un color i pinteu dins del cercle
+          Selecciona un color i pinta dins el cercle
         </p>
-        <input id="picker" class="jscolor" value="ab5127" onmouseover="this.jscolor.show();" onchange="updateColor(this.value);"><br>
-        <script>
-        // http://www.paulirish.com/2009/random-hex-color-code-snippets/
-        var n = Math.floor(Math.random()*16777215).toString(16);
-        // http://stackoverflow.com/a/10073788/738675
-        n = n.length >= 6 ? n : new Array(6 - n.length + 1).join('0') + n;
-        document.getElementById("picker").value = n;
-        function hidePicker() {
-            if (typeof document.getElementById('picker').jscolor != 'undefined') document.getElementById('picker').jscolor.hide();
-        }
-        </script>
-         <br>
-        <span>Gruix del pinzell: </span><input type="text" id="width" value="20" onchange="updateWidth(this.value)"><br>
-           <input type="range" min="0" max="70" value="20" step="1" oninput="updateWidth(this.value)">
-           <br>
-          <span>Transparència del pinzell: </span><input type="text" id="alpha" value=".01" onchange="updateAlpha(this.value)"><br>
-           <input type="range" min=".001" max=".2" value=".01" step=".001" oninput="updateAlpha(this.value)">
-        <br><br>
-        <button class="kbutton" onclick="exportCanvas()">Desar</button>
-        <button class="kbutton" onclick="clearCanvas();updateMap();">Netejar</button>
-        <input type='file' id="imgsphere" />
-        <br><br>
+
+        <div>
+          <img id="reticle" src="reticle_ok.png">
+          <canvas id="kcanvas" height="256" width="256" style="border:1px #000 solid;" onmouseover="hidePicker()"></canvas>
+        </div>
+
+        <input id="picker" class="jscolor {zIndex:3000}" value="ab5127" onmouseover="this.jscolor.show();" onchange="updateColor(this.value);">
+
+        <div class="tools" onmouseover="hidePicker()">
+          <span>Gruix del pinzell: </span><input type="text" id="width" value="50" onchange="updateWidth(this.value)"><br>
+             <input type="range" min="0" max="70" value="50" step="1" oninput="updateWidth(this.value)" class="slider">
+             <br>
+          <span>Transparència del pinzell: </span><input type="text" id="alpha" value=".003" onchange="updateAlpha(this.value)"><br>
+             <input type="range" min=".001" max=".2" value=".003" step=".001" oninput="updateAlpha(this.value)" class="slider">
+        </div>
+
+        <div onmouseover="hidePicker()">
+          <button class="btn" onclick="exportCanvas()">Desa el mapa de llums</button>
+        </div>
+
+        <div onmouseover="hidePicker()">
+          <input type='file' id="imgsphere" accept="image/*" class="inputfile"/>
+          <button class="btn"><label for="imgsphere">Carrega un mapa de llums</label></button>
+        </div>
+
+        <div onmouseover="hidePicker()">
+          <button class="btn" onclick="clearCanvas();updateMap();">Esborra el mapa de llums</button>
+        </div>
+
+        <div onmouseover="hidePicker()">
+          <button class="btn" onclick="captureMap()">Desa la imatge del relleu</button>
+        </div>
+        <br>
+
+        <div class="bold">
+          Capes
+        </div>
         <input type="checkbox" id="hibrida" checked="checked"><label for="hibrida">Mapa</label>
         <br>
-        <input type="checkbox" id="toponimia"><label for="toponimia">Noms de lloc</label>
+        <input type="checkbox" id="toponimia" checked="checked"><label for="toponimia">Noms de lloc</label>
         <br>
-        <input type="checkbox" id="allaus"><label for="allaus">Allaus (observacions i enquestes)</label>
         <br>
-        <input type="checkbox" id="vegetacio"><label for="vegetacio">Cobertes del sòl</label>
-        <br><br>
-        <label>Estils exemple</label>
-        <br>
-        <button class="kbutton" onclick="loadImage('wheels/imhof.png')">Imhof</button>
-        <button class="kbutton" onclick="loadImage('wheels/gradientnoy_normal_inv.jpg')">NOY_inv</button>
-        <button class="kbutton" onclick="loadImage('wheels/gradientnoy_normal.jpg')">NOY</button>
-        <button class="kbutton" onclick="loadImage('wheels/wheel.png')">Wheel</button>
-        <button class="kbutton" onclick="loadImage('wheels/pencil2.jpg')">Pencil</button>
-        <button class="kbutton" onclick="loadImage('wheels/rampa_rodona.png')">Rodona</button>
-        <button class="kbutton" onclick="loadImage('wheels/rampa_diamant.png')">Diamant</button>
-        <br>
-        <img src="icgc2016_256.png" alt="Institut Cartogràfic i Geològic de Catalunya" class="logo"/>
+
+        <div class="bold">
+          Exemples
+        </div>
+
+        <div class="examples">
+          <ul>
+            <li>
+              <a href="#" onclick="loadImage('wheels/wheel.png');map.setView([42.2682,1.6296],13);return false;">Solanes i obagues</a>
+            </li>
+            <li>
+              <a href="#" onclick="loadImage('wheels/Solanes_SE.png');map.setView([41.2773,0.8839],14);return false;">Vessants orientats a SE</a>
+            </li>
+            <li>
+              <a href="#" onclick="loadImage('wheels/rampa_rodona.png');map.setView([42.1000,1.6549],14);return false;">Planes i escarpats</a>
+            </li>
+            <li>
+              <a href="#" onclick="loadImage('wheels/pendents_majors_45g2.png');map.setView([41.9835,2.4176],14);return false;">Pendents de més de 45 graus</a>
+            </li>
+            <li>
+              <a href="#" id="default_style" onclick="loadImage('wheels/gris.png');map.setView([41.8354,1.7427],15);return false;">Ombrejat estil gris</a>
+            </li>
+            <li>
+              <a href="#" onclick="loadImage('wheels/imhof.png');map.setView([42.3437,3.1984],12);return false;">Ombrejat estil suís</a>
+            </li>
+            <li>
+              <a href="#" onclick="loadImage('wheels/gradientnoy_normal.jpg');map.setView([42.2156,1.9197],14);return false;">Colors de llum dia</a>
+            </li>
+            <li>
+              <a href="#" onclick="loadImage('wheels/pencil2.jpg');map.setView([42.1854,2.4971],15);return false;">Estil llapis</a>
+            </li>
+            <li>
+              <a href="#" onclick="loadImage('wheels/aspectAndslope.png');map.setView([42.1854,2.4971],15);return false;">Aspecte i pendent</a>
+            </li>
+          </ul>
+        </div>
 
     </div>
 
     <div id="map" onmouseover="hidePicker()"></div>
 
+    <div class="logo">
+      <img src="icgc.png" alt="Institut Cartogràfic i Geològic de Catalunya" class="logo"/>
+    </div>
+
     <!-- 3rd party libraries -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.0.0-rc.1/leaflet.js"></script>
+    <script src="lib/jscolor.min.js"></script>
+
+    <script>
+    // http://www.paulirish.com/2009/random-hex-color-code-snippets/
+    var n = Math.floor(Math.random()*16777215).toString(16);
+    // http://stackoverflow.com/a/10073788/738675
+    n = n.length >= 6 ? n : new Array(6 - n.length + 1).join('0') + n;
+    document.getElementById("picker").value = n;
+    function hidePicker() {
+        if (typeof document.getElementById('picker').jscolor != 'undefined') document.getElementById('picker').jscolor.hide();
+    }
+    </script>
+
+    <!-- <script src="https://unpkg.com/leaflet@1.0.0-rc.3/dist/leaflet.js"></script> -->
+    <script src="https://unpkg.com/leaflet@1.5.1/dist/leaflet.js"></script>
     <!-- bog-standard leaflet URL hash -->
     <script src="lib/leaflet-hash.js"></script>
     <!-- make canvas.toBlob work in Safari -->
@@ -150,10 +345,12 @@
     <script type="text/javascript" src="lib/canvas-toBlob.js"></script>
 
     <script type="text/javascript" src="lib/L.Control.ZoomLabel.js"></script>
+
+    <script type="text/javascript" src="lib/FileSaver.min.js"></script>
     <!-- End of 3rd party libraries -->
 
     <!-- Main tangram library -->
-    <script src="https://mapzen.com/tangram/0.8/tangram.debug.js"></script>
+    <script src="lib/tangram.debug.js"></script>
 
     <!-- Demo module -->
     <script src="main.js"></script>
@@ -168,6 +365,6 @@
     <script>
       MPZN.bug({search: true});
     </script> -->
-
+    <script src="/betaserver.google-analytics.js"></script>
   </body>
 </html>
