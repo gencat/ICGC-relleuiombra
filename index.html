@@ -13,7 +13,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>Relleu i ombra: anàlisi visual d'orientacions i pendents</title>
 
-    <!-- <link rel="stylesheet" href="https://unpkg.com/leaflet@1.0.0-rc.3/dist/leaflet.css" /> -->
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.5.1/dist/leaflet.css" />
     <link rel="stylesheet" href="css/L.Control.ZoomLabel.css">
     <link href="https://fonts.googleapis.com/css?family=Roboto" rel="stylesheet">
@@ -31,13 +30,14 @@
             width: 100%;
             position: absolute;
         }
+
         #kinkade {
             font-size: 12px;
             position: absolute;
             right: 6px;
             z-index: 1001;
             background: #f2f2f2;
-            padding: 4px 4px 4px 4px;
+            padding: 7px;
             margin-top: 5px;
             width: 256px;
             opacity: 0.90;
@@ -91,8 +91,7 @@
         }
 
       .font-xica{
-        font-size: 8pt;
-        margin-top: 3px;
+        margin: 5px 0;
       }
 
       .twitter{
@@ -135,7 +134,7 @@
       }
 
       .tools{
-        margin-top: 5px;
+        margin-top: 7px;
       }
 
       .buttons{
@@ -177,7 +176,16 @@
       }
 
       .btn:hover, .btn:focus {
-        background-color: #00B4E8;
+        background-color: #5FB1E7;
+      }
+
+      .btn.dark-blue {
+        margin-top: 15px;
+        background-color: #1869A0;
+      }
+
+      .btn.dark-blue:hover, .btn.dark-blue:focus {
+        background-color: #208DD5;
       }
 
       /* The slider itself */
@@ -232,13 +240,14 @@
         <div class="bold">
           Crea el teu mapa de llums
         </div>
-        <p class="font-xica">
+
+        <div class="font-xica">
           Selecciona un color i pinta dins el cercle
-        </p>
+        </div>
 
         <div>
           <img id="reticle" src="reticle_ok.png">
-          <canvas id="kcanvas" height="256" width="256" style="border:1px #000 solid;" onmouseover="hidePicker()"></canvas>
+          <canvas id="kcanvas" height="256" width="256" onmouseover="hidePicker()"></canvas>
         </div>
 
         <input id="picker" class="jscolor {zIndex:3000}" value="ab5127" onmouseover="this.jscolor.show();" onchange="updateColor(this.value);">
@@ -265,18 +274,23 @@
         </div>
 
         <div onmouseover="hidePicker()">
-          <button class="btn" onclick="captureMap()">Desa la imatge del relleu</button>
+          <button class="btn dark-blue" onclick="captureMap()">Desa la imatge del relleu</button>
         </div>
         <br>
 
         <div class="bold">
           Capes
         </div>
-        <input type="checkbox" id="hibrida" checked="checked"><label for="hibrida">Mapa</label>
-        <br>
-        <input type="checkbox" id="toponimia" checked="checked"><label for="toponimia">Noms de lloc</label>
-        <br>
-        <br>
+        <div class="examples">
+            <ul>
+              <li>
+                <input type="checkbox" id="hibrida" checked="checked"><label for="hibrida">Mapa</label>
+              </li>
+              <li>
+                <input type="checkbox" id="toponimia" checked="checked"><label for="toponimia">Noms de lloc</label>
+              </li>
+            </ul>
+        </div>
 
         <div class="bold">
           Exemples
@@ -336,7 +350,6 @@
     }
     </script>
 
-    <!-- <script src="https://unpkg.com/leaflet@1.0.0-rc.3/dist/leaflet.js"></script> -->
     <script src="https://unpkg.com/leaflet@1.5.1/dist/leaflet.js"></script>
     <!-- bog-standard leaflet URL hash -->
     <script src="lib/leaflet-hash.js"></script>
